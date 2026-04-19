@@ -30,9 +30,13 @@ from api.routes import router
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Run DB setup and PDF ingestion on startup."""
+    import os
     print("\n🚀 CBSE Smart Tutor API — Starting up...")
     setup_database()
-    ingest_all_pdfs()
+    if os.getenv("SKIP_INGESTION") != "true":
+        ingest_all_pdfs()
+    else:
+        print("⏭️  Skipping PDF ingestion (SKIP_INGESTION=true) — Using existing NeonDB data.")
     print("🎓 API is ready to serve students!\n")
     yield
     print("👋 Server shutting down.")

@@ -93,7 +93,8 @@ def ingest_all_pdfs():
                 print(f"  📁 Folder not found, skipping: {folder_name}")
                 continue
 
-            for pdf_path in sorted(folder.glob("**/*.pdf")):
+            # Memory Optimization: Only use 1 PDF per folder for deployment
+            for pdf_path in sorted(folder.glob("**/*.pdf"))[:1]:
                 source_key = f"{subject}::{pdf_path.name}"
 
                 if source_already_indexed(source_key):
