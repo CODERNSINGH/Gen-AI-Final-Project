@@ -1,126 +1,113 @@
-# 🎓 CBSE 10th Smart Tutor
+# CBSE 10th Smart Tutor
 
-A RAG-powered Q&A platform for CBSE Class 10 board exam preparation.
-Built with **FastAPI** · **Streamlit** · **Groq LLaMA-3.3-70B** · **NeonDB (pgvector)**
+A professional, Retrieval-Augmented Generation (RAG) powered Q&A platform designed for comprehensive CBSE Class 10 board examination preparation.
+
+This intelligent tutoring system leverages **FastAPI**, **NeonDB (pgvector)**, a **Vanilla JavaScript/HTML/CSS Frontend**, and **Groq LLaMA-3.3-70B** to provide students with precise, board-exam-optimized answers.
+
+The platform's knowledge base is exhaustive, comprising complete NCERT textbooks, detailed chapter solutions, and an extensive collection of Past Year Questions (PYQs) from all previous years to ensure no topic is left uncovered.
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 Gen-AI-Final-Project/
-├── server/                         # FastAPI backend
-│   ├── main.py                     # App entry point (startup + routes)
-│   ├── requirements.txt
-│   ├── .env                        # DATABASE_URL, GORQ_API_KEY
+├── server/                         # FastAPI Backend
+│   ├── main.py                     # Initializer and boot sequence
+│   ├── requirements.txt            # Python dependencies
+│   ├── railpack-plan.json          # Deployment configuration
+│   ├── .env                        # Environment configurations
 │   │
 │   ├── api/
-│   │   └── routes.py               # All API endpoints (/ask, /stats, /ingest…)
+│   │   └── routes.py               # REST API endpoints
 │   │
 │   ├── agent/
-│   │   └── groq_agent.py           # Groq LLM agent + exam-optimized prompt
+│   │   └── groq_agent.py           # Core agent logic and prompt engineering
 │   │
 │   ├── database/
-│   │   └── neon_db.py              # NeonDB / pgvector setup and queries
+│   │   └── neon_db.py              # Vector database operations
 │   │
-│   ├── ingestion/
-│   │   └── pdf_loader.py           # PDF → chunk → embed → store pipeline
-│   │
-│   └── resources/                  # 📂 Place your PDF folders here
-│       ├── Maths Solution/
-│       ├── Maths Ncrt/
-│       ├── Science Solution/
-│       ├── Science ncrt/
-│       ├── English Solution/
-│       ├── Englsih Ncrt/
-│       ├── SST Solution/
-│       └── sst ncrt/
+│   └── ingestion/
+│       └── pdf_loader.py           # Document embedding matrix
 │
-├── client/                         # Streamlit frontend
-│   ├── app.py                      # Main UI
-│   ├── requirements.txt
-│   └── .streamlit/
-│       └── config.toml             # Dark theme + server config
-│
-├── render.yaml                     # Render Blueprint (deploy both services)
-└── .gitignore
+├── client/                         # Stateless Frontend Web Interface
+│   ├── index.html                  # Core DOM structure
+│   ├── style.css                   # Premium CSS stylesheets
+│   ├── app.js                      # Asynchronous API logic
+│   └── run_frontend.py             # Local development server script
 ```
 
 ---
 
-## 🚀 Run Locally
+## Technical Features
 
-### 1. Server (FastAPI)
+* **Comprehensive Knowledge Base:** Integrates comprehensive NCERT content and exhaustive all-year Past Year Questions (PYQ) across Mathematics, Science, English, and Social Science.
+* **Stateless Deployment:** The server repository has been perfectly isolated. All PDF processing is run asynchronously off-deployment, allowing the server to utilize minimal memory.
+* **Premium Client Architecture:** The frontend utilizes an ultra-fast, dependency-free vanilla technology stack. 
+* **Dynamic Generation:** Answers are structurally mapped to match explicit CBSE board grading rubrics (Concept, Context, Step-by-Step Resolution, Marks Distribution).
+
+---
+
+## Local Development Setup
+
+### 1. Backend Server Configuration
+Navigate to the server directory, install the required packages, and start the FastAPI application:
+
 ```bash
 cd server
 pip install -r requirements.txt
 
-# Add your keys to .env:
+# Ensure your .env file is populated with:
 # DATABASE_URL=...
 # GORQ_API_KEY=...
 
 uvicorn main:app --reload --port 8000
 ```
+The API documentation will be available at: http://localhost:8000/docs
 
-The server will **automatically ingest all PDFs** in `server/resources/` on first startup.
-Subsequent restarts skip already-indexed files.
+### 2. Frontend Client Application
+The frontend requires no package manager. Simply serve the directory locally using the provided python script:
 
-API docs: http://localhost:8000/docs
-
-### 2. Client (Streamlit)
 ```bash
 cd client
-pip install -r requirements.txt
-streamlit run app.py
+python run_frontend.py
 ```
-
-UI: http://localhost:8501
+The User Interface will be available at: http://localhost:3000
 
 ---
 
-## ☁️ Deploy to Render
+## Deployment Architecture
 
-1. Push repo to GitHub
-2. Go to [Render Dashboard](https://dashboard.render.com) → **New Blueprint**
-3. Connect your GitHub repo → Render reads `render.yaml` automatically
-4. Set environment variables for each service:
-   - **Server**: `DATABASE_URL`, `GORQ_API_KEY`
-   - **Client**: `BACKEND_URL` = your server's Render URL (e.g. `https://cbse-tutor-server.onrender.com`)
+The application is structured to be deployed efficiently using a decoupled microservice architecture:
 
-> **Note:** PDFs in `server/resources/` are indexed into NeonDB on startup.
-> After first deploy, the data persists in NeonDB — restarts are fast.
+1. **Backend Server (Web Service):**
+   * Deploy the `server/` directory as a standard Web Service on Render or Railway.
+   * Provide the `DATABASE_URL` and `GORQ_API_KEY` environmental arguments.
+   * `railpack-plan.json` is provided to define explicit build phases if required.
 
----
-
-## 🧠 How It Works (RAG Pipeline)
-
-```
-Student Question
-       │
-       ▼
-[Embed with MiniLM-L6-v2]
-       │
-       ▼
-[pgvector similarity search → NeonDB]
-       │  (top 6 most relevant chunks from CBSE PDFs)
-       ▼
-[Groq LLaMA-3.3-70B with exam-optimized prompt]
-       │
-       ▼
-Formatted Answer:
-  • Quick Concept
-  • Step-by-step board exam answer
-  • Marks breakdown + Topper's strategy
-  • Key points to remember
-```
+2. **Frontend Website (Static Site):**
+   * Deploy the `client/` directory as a completely free Static Site on Render.
+   * The `app.js` file handles all backend routing asynchronously.
 
 ---
 
-## 📚 Supported Subjects
+## System Workflow (RAG Pipeline)
 
-| Subject      | Sources |
-|-------------|---------|
-| 📐 Mathematics | NCERT textbook + Solved papers 2013–2025 |
-| 🔬 Science     | NCERT textbook + Solved papers 2013–2025 |
-| 📖 English     | NCERT Lit/Lang + Solved papers 2013–2025 |
-| 🌍 SST         | NCERT textbook + Solved papers 2013–2025 |
+```
+Student Query
+       |
+       v
+Context Embedding (MiniLM-L6-v2)
+       |
+       v
+Vector Similarity Search (NeonDB via pgvector)
+       |  (Retrieves highest-confidence chunks from PYQs and NCERT materials)
+       v
+Generative Resolution (Groq LLaMA-3.3-70B)
+       |
+       v
+System Output:
+  - Immediate Conceptual Overview
+  - Methodical Board-Standard Answer Formulation
+  - Expected Mark Breakdown and Examiner Expectations
+```

@@ -2,7 +2,7 @@
 // client/app.js - Vanilla JS Logic for CBSE Tutor
 // ──────────────────────────────────────────────────────────────────────────────
 
-const BACKEND_URL = "http://localhost:8000";
+const BACKEND_URL = "https://gen-ai-final-project.onrender.com";
 
 // State
 let currentSubject = "All Subjects";
