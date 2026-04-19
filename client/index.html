@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CBSE Smart Tutor UI</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Highlight.js for Code Blocks (Premium Monokai Theme) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css">
+    
+    <!-- Marked.js for Markdown Parsing -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
+    <!-- DOMPurify to sanitize markdown output -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
+    
+    <!-- Highlight.js script -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="brand-area">
+                <div class="brand-logo">A</div>
+                <div class="brand-text">
+                    <h1>CBSE Smart Tutor</h1>
+                    <p>Class 10 Board Assistant</p>
+                </div>
+            </div>
+
+            <button class="new-chat-btn" id="newChatBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                New Conversation
+            </button>
+
+            <div class="sidebar-section">
+                <label>Subject</label>
+                <div class="custom-select">
+                    <select id="subjectSelect">
+                        <option value="All Subjects">All Subjects</option>
+                        <option value="Mathematics">Mathematics</option>
+                        <option value="Science">Science</option>
+                        <option value="English">English</option>
+                        <option value="SST">SST</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="sidebar-section" id="suggestionsArea">
+                <label>Suggestions</label>
+                <div class="suggestions-list" id="suggestionsList">
+                    <!-- populated dynamically based on subject -->
+                </div>
+            </div>
+
+            <div class="sidebar-spacer"></div>
+
+            <div class="sidebar-section" id="statsArea">
+                <label>Knowledge Base</label>
+                <p class="stats-total" id="statsTotal">Loading...</p>
+                <div class="stats-list" id="statsList">
+                    <!-- populated dynamically -->
+                </div>
+            </div>
+
+            <div class="connection-status">
+                <div class="status-indicator" id="statusIndicator"></div>
+                <span id="statusText">Connecting...</span>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            </button>
+
+            <!-- Chat Area -->
+            <div class="chat-container" id="chatContainer">
+                <!-- Empty State -->
+                <div class="empty-state" id="emptyState">
+                    <div class="empty-logo">A</div>
+                    <h2>How can I help you today?</h2>
+                    <p>Ask any CBSE Class 10 question. Get board-exam-ready answers with marks breakdown and topper strategy.</p>
+                </div>
+                <!-- Messages will be appended here -->
+            </div>
+
+            <!-- Input Area -->
+            <div class="input-wrapper">
+                <div class="input-container">
+                    <textarea 
+                        id="chatInput" 
+                        placeholder="Ask anything about your CBSE syllabus..." 
+                        rows="1"
+                    ></textarea>
+                    <button class="send-btn" id="sendBtn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                    </button>
+                </div>
+                <div class="disclaimer">
+                    Powered by Groq LLaMA-3.3-70B • NCERT & Solved Papers 2013–2025
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Overlay for mobile sidebar -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
