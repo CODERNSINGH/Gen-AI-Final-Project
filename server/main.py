@@ -21,7 +21,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 
 from database.neon_db import setup_database
-from ingestion.pdf_loader import ingest_all_pdfs
 from api.routes import router
 
 
@@ -29,14 +28,9 @@ from api.routes import router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Run DB setup and PDF ingestion on startup."""
-    import os
+    """Run DB setup only on startup."""
     print("\n🚀 CBSE Smart Tutor API — Starting up...")
     setup_database()
-    if os.getenv("SKIP_INGESTION") != "true":
-        ingest_all_pdfs()
-    else:
-        print("⏭️  Skipping PDF ingestion (SKIP_INGESTION=true) — Using existing NeonDB data.")
     print("🎓 API is ready to serve students!\n")
     yield
     print("👋 Server shutting down.")

@@ -85,16 +85,3 @@ def ask_question(req: QuestionRequest):
     result = generate_answer(question, chunks, req.subject or "")
 
     return result
-
-
-# ── Manual Ingest Trigger ─────────────────────────────────────────────────────
-
-@router.post("/ingest", tags=["Admin"])
-def trigger_ingest():
-    """
-    Manually re-trigger PDF ingestion.
-    Useful after adding new PDFs to the resources folder.
-    """
-    from ingestion.pdf_loader import ingest_all_pdfs
-    new_chunks = ingest_all_pdfs()
-    return {"message": "Ingestion complete", "new_chunks": new_chunks}
